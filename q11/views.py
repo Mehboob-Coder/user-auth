@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import User, Profile
-from .helpers import send_forget_password_mail
+from .helpers import send_email_User, send_forget_password_mail
 import uuid
 
 # Login view
@@ -44,6 +44,10 @@ def Register(request):
 
         user_obj = User.objects.create_user(username=username, email=email, password=password)
         Profile.objects.create(user=user_obj)
+        
+        send_email_User(user_obj.email)
+        messages.success(request,'your acount has been created successfuly.we have setnt you a confirmation email,please confirm your email in order to activate your acount ')
+           #welcome email
 
         messages.success(request, 'Registration successful. Please log in.')
         return redirect('/login/')
